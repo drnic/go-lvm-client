@@ -10,17 +10,14 @@ var _ = Describe("PhysicalVolume", func() {
 	Describe("parse colon output", func() {
 		It("new from colon output", func() {
 			pv := NewPhysicalVolume()
-			err := pv.ParseDisplayWithColons("/dev/sda5:vg0:84254720:-1:8:8:-1:4096:10284:0:10284:IKGNO5-Dx7w-2UBv-rUzw-ekJg-e496-9RQ5cP")
+			err := pv.ParseDisplayWithColons("  /dev/sda5:precise64:lvm2:a-:81672.00:0")
 			Expect(err).To(BeNil())
 			Expect(pv.PVName).To(Equal("/dev/sda5"))
-			Expect(pv.VGName).To(Equal("vg0"))
-			Expect(pv.PVSize).To(Equal(84254720)) // 40Gib?
-/*			Expect(pv.Allocatable).To(Equal(true))
-			Expect(pv.PESize).To(Equal(4096))
-			Expect(pv.TotalPE).To(Equal(10284))
-			Expect(pv.FreePE).To(Equal(0))
-			Expect(pv.AllocatedPE).To(Equal(10284))*/
-			Expect(pv.UUID).To(Equal("IKGNO5-Dx7w-2UBv-rUzw-ekJg-e496-9RQ5cP"))
+			Expect(pv.VGName).To(Equal("precise64"))
+			Expect(pv.Format).To(Equal("lvm2"))
+			Expect(pv.Attr).To(Equal("a-"))
+			Expect(pv.PVSize).To(Equal(81672.0)) // Mb
+			Expect(pv.FreePE).To(Equal(0.0))
 		})
 
 		It("invalid number of tokens", func() {

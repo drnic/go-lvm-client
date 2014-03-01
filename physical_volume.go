@@ -9,13 +9,10 @@ import (
 type PhysicalVolume struct {
   PVName         string
   VGName         string
-  PVSize         int
-  Allocatable    bool
-  PESize         int
-  TotalPE        int
-  FreePE         int
-  AllocatedPE    int
-  UUID           string
+  Format         string
+  Attr           string
+  PVSize         float64
+  FreePE         float64
 }
 
 func NewPhysicalVolume() PhysicalVolume {
@@ -23,22 +20,26 @@ func NewPhysicalVolume() PhysicalVolume {
 }
 
 func (pv *PhysicalVolume) ParseDisplayWithColons(pvdisplayWithColons string) (err error) {
-  var value uint64
-
-  tokens := strings.Split(pvdisplayWithColons, ":")
-  if (len(tokens) != 12) {
-    err = errors.New("Expected 12 colon items from pvdisplay")
+  tokens := strings.Split(strings.Trim(pvdisplayWithColons, " "), ":")
+  if (len(tokens) != 6) {
+    err = errors.New("Expected 6 colon items from pvs")
     return
   }
   pv.PVName = tokens[0]
   pv.VGName = tokens[1]
+  pv.Format = tokens[2]
+  pv.Attr   = tokens[3]
 
-  value, err = strconv.ParseUint(tokens[2], 10, 32)
+  pv.PVSize, err = strconv.ParseFloat(tokens[4], 32)
+  if (err != nil) {
+    return err
+  }
+
+  pv.FreePE, err = strconv.ParseFloat(tokens[5], 32)
   if (err != nil) {
     return
   }
-  pv.PVSize = int(value)
-  pv.UUID = tokens[11]
+
   return
 }
 
