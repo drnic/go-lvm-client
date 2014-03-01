@@ -174,3 +174,25 @@ Writing inode tables: done
 Creating journal (4096 blocks): done
 Writing superblocks and filesystem accounting information: done
 ```
+
+Mount the new volume:
+
+```
+# mkdir -p /mnt/test1
+# mount /dev/vg1/test1 /mnt/test1
+```
+
+See it listed in `df`:
+
+```
+# df
+Filesystem            1K-blocks      Used Available Use% Mounted on
+/dev/mapper/vg0-root   38315504   1570560  34791972   5% /
+udev                     499596         8    499588   1% /dev
+tmpfs                    203724       280    203444   1% /run
+none                       5120         0      5120   0% /run/lock
+none                     509304         0    509304   0% /run/shm
+/dev/sda1                863760     71396    748488   9% /boot
+/vagrant              487712924 429700640  58012284  89% /vagrant
+/dev/mapper/vg1-test1     75231      1550     69585   3% /mnt/test1
+```
