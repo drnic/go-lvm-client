@@ -1,0 +1,27 @@
+#!/bin/bash
+
+apt-get install -y git-core
+
+pushd /root
+
+wget https://go.googlecode.com/files/go1.2.linux-amd64.tar.gz
+tar xvf go1.2.linux-amd64.tar.gz
+
+mkdir /root/gopath
+
+cat <<EOF >/etc/profile.d/go.sh
+export PATH=$PATH:/root/go/bin
+export GOPATH=/root/gopath
+export GOROOT=/root/go
+EOF
+
+source /etc/profile.d/go.sh
+
+go get github.com/onsi/gomega
+go get github.com/onsi/ginkgo
+
+mkdir /root/gopath/src/github.com/starkandwayne
+
+ln -s /vagrant/ /root/gopath/src/github.com/starkandwayne/go-lvm-client
+
+popd
