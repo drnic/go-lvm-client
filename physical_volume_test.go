@@ -31,12 +31,13 @@ var _ = Describe("PhysicalVolume", func() {
 	Describe("parse pvs output", func() {
 		It("initial-vagrant", func() {
 			systemRepo := &system.FakeSystemRepository{
-				PvsOutput: "  /dev/sda5:precise64:lvm2:a-:81672.00:0",
+				PvsOutput: "  /dev/sda5:precise64:lvm2:a-:81672.00:0\n  /dev/sda6:precise64:lvm2:a-:81672.00:0",
 			}
 			pvs, err := PhysicalVolumes(systemRepo)
 			Expect(err).To(BeNil())
-			Expect(len(pvs)).To(Equal(1))
+			Expect(len(pvs)).To(Equal(2))
 			Expect(pvs[0].PVName).To(Equal("/dev/sda5"))
+			Expect(pvs[1].PVName).To(Equal("/dev/sda6"))
 		})
 	})
 })
