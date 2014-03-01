@@ -1,0 +1,29 @@
+  --- Logical volume ---
+  LV Name                /dev/vg0/root
+  VG Name                vg0
+  LV UUID                Q4dU9J-BG6a-JwDe-wy0I-vONH-Xqtg-5gAk5M
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                37.25 GiB
+  Current LE             9536
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:0
+
+  --- Logical volume ---
+  LV Name                /dev/vg0/swap
+  VG Name                vg0
+  LV UUID                UnuGmJ-zkLB-Zbd3-qBf5-kuFi-K6Y4-jL9jbN
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                2.92 GiB
+  Current LE             748
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:1
