@@ -10,7 +10,7 @@ var _ = Describe("PhysicalVolume", func() {
 	Describe("parse colon output", func() {
 		It("new from colon output", func() {
 			pv := NewPhysicalVolume()
-			err := pv.ParseDisplayWithColons("  /dev/sda5:precise64:lvm2:a-:81672.00:0")
+			err := pv.ParseLine("  /dev/sda5:precise64:lvm2:a-:81672.00:0", ":")
 			Expect(err).To(BeNil())
 			Expect(pv.PVName).To(Equal("/dev/sda5"))
 			Expect(pv.VGName).To(Equal("precise64"))
@@ -22,7 +22,7 @@ var _ = Describe("PhysicalVolume", func() {
 
 		It("invalid number of tokens", func() {
 			pv := NewPhysicalVolume()
-			err := pv.ParseDisplayWithColons("x:y:z")
+			err := pv.ParseLine("x:y:z", ":")
 			Expect(err).ToNot(BeNil())
 		})
 	})
