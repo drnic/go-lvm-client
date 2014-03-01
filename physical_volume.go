@@ -1,7 +1,10 @@
 package lvm_client
 
-import "strings"
-import "errors"
+import (
+  "errors"
+  "strings"
+  "strconv"
+)
 
 type PhysicalVolume struct {
   PVName         string
@@ -20,20 +23,22 @@ func NewPhysicalVolume() PhysicalVolume {
 }
 
 func (pv *PhysicalVolume) ParseDisplayWithColons(pvdisplayWithColons string) (err error) {
+  var value uint64
+
   tokens := strings.Split(pvdisplayWithColons, ":")
   if (len(tokens) != 12) {
     err = errors.New("Expected 12 colon items from pvdisplay")
     return
   }
   pv.PVName = tokens[0]
-/*  VGName: tokens[1],
-  PVSize: 0,
-  Allocatable: true,
-  PESize: 0,
-  TotalPE: 0,
-  FreePE: 0,
-  AllocatedPE: 0,
-  UUID: "xxx",*/
+  pv.VGName = tokens[1]
+
+  value, err = strconv.ParseUint(tokens[2], 10, 32)
+  if (err != nil) {
+    return
+  }
+  pv.PVSize = int(value)
+  pv.UUID = tokens[11]
   return
 }
 
