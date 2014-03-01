@@ -4,6 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/starkandwayne/go-lvm-client"
+	"github.com/starkandwayne/go-lvm-client/system"
 )
 
 var _ = Describe("PhysicalVolume", func() {
@@ -26,8 +27,16 @@ var _ = Describe("PhysicalVolume", func() {
 			Expect(err).ToNot(BeNil())
 		})
 	})
-	It("loads PVs from pvdisplay", func() {
-		pvs, _ := PhysicalVolumes()
-		Expect(len(pvs)).To(Equal(1))
+
+	Describe("parse pvs output", func() {
+		It("initial-vagrant", func() {
+			systemRepo := &system.FakeSystemRepository{
+				PvsOutput: "  /dev/sda5:precise64:lvm2:a-:81672.00:0",
+			}
+			pvs, err := PhysicalVolumes(systemRepo)
+			Expect(err).To(BeNil())
+			Expect(len(pvs)).To(Equal(1))
+			Expect(pvs[0].PVName).To(Equal("/dev/sda5"))
+		})
 	})
 })

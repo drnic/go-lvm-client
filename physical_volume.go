@@ -4,6 +4,7 @@ import (
   "errors"
   "strings"
   "strconv"
+  "github.com/starkandwayne/go-lvm-client/system"
 )
 
 type PhysicalVolume struct {
@@ -43,11 +44,22 @@ func (pv *PhysicalVolume) ParseLine(pvdisplayWithColons string, delimiter string
   return
 }
 
-func PhysicalVolumes() (pvs []PhysicalVolume, err error) {
-  pvs = []PhysicalVolume{
-    {
-      PVName: "foo",
-    },
+func PhysicalVolumes(repo system.SystemRepository) (pvs []PhysicalVolume, err error) {
+  pvsOutput, delimiter, err := repo.PVS()
+  pvs = []PhysicalVolume{}
+  // split output by newline
+  // look over lines
+  // ParseLine
+  // append to pvs
+  pvsLines := strings.Split(pvsOutput, "\n")
+  for _, pvLine := range pvsLines {
+    pv := NewPhysicalVolume()
+    err = pv.ParseLine(pvLine, delimiter)
+    if err != nil {
+      return
+    }
+    pvs = append(pvs, pv)
   }
+
   return
 }
