@@ -7,6 +7,11 @@ import (
 )
 
 var _ = Describe("PhysicalVolume", func() {
+	It("new from colon output", func() {
+		pv := NewPhysicalVolume()
+		pv.ParseDisplayWithColons("/dev/sda5:vg0:84254720:-1:8:8:-1:4096:10284:0:10284:IKGNO5-Dx7w-2UBv-rUzw-ekJg-e496-9RQ5cP")
+		Expect(pv.PVName).To(Equal("/dev/sda5"))
+	})
 	It("loads PVs from pvdisplay", func() {
 		pvs, _ := PhysicalVolumes()
 		Expect(len(pvs)).To(Equal(1))
