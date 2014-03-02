@@ -24,4 +24,12 @@ func main() {
 	}
 	fmt.Println("Volume Groups:");
 	fmt.Printf("%v\n", vgs)
+
+	lvs, err := lvm.LogicalVolumes(repo)
+	if err != nil {
+		fmt.Println(err.Error());
+		return
+	}
+	fmt.Println("Logical Volumes:");
+	fmt.Printf("%v\n", lvs)
 }

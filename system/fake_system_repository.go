@@ -3,6 +3,7 @@ package system
 type FakeSystemRepository struct {
   PvsOutput string
   VgsOutput string
+  LvsOutput string
 }
 
 func (repo FakeSystemRepository) PhyiscalVolumes() (output string, delimiter string, err error) {
@@ -13,6 +14,12 @@ func (repo FakeSystemRepository) PhyiscalVolumes() (output string, delimiter str
 
 func (repo FakeSystemRepository) VolumeGroups() (output string, delimiter string, err error) {
   output = repo.VgsOutput
+  delimiter = ":"
+  return
+}
+
+func (repo FakeSystemRepository) LogicalVolumes() (output string, delimiter string, err error) {
+  output = repo.LvsOutput
   delimiter = ":"
   return
 }
