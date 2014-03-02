@@ -16,7 +16,10 @@ var _ = Describe("LogicalVolume", func() {
       Expect(lv.LVName).To(Equal("root"))
       Expect(lv.VGName).To(Equal("precise64"))
       Expect(lv.Attrs).To(Equal("owi-ao"))
-      Expect(lv.VolumeType).To(Equal(Origin))
+      Expect(lv.VolumeType).To(Equal(LVTOrigin))
+      Expect(lv.Writable).To(BeTrue())
+      Expect(lv.AllocationPolicy).To(Equal(LVATInherited))
+      Expect(lv.Locked).ToNot(BeTrue())
 
       Expect(lv.LVSize).To(Equal(80904.0)) // Mb
     })
@@ -37,9 +40,9 @@ var _ = Describe("LogicalVolume", func() {
       Expect(err).To(BeNil())
       Expect(len(lvs)).To(Equal(2))
       Expect(lvs[0].LVName).To(Equal("root"))
-      Expect(lvs[0].VolumeType).To(Equal(Virtual))
+      Expect(lvs[0].VolumeType).To(Equal(LVTVirtual))
       Expect(lvs[1].LVName).To(Equal("swap_1"))
-      Expect(lvs[1].VolumeType).To(Equal(MirrorImageOutOfSync))
+      Expect(lvs[1].VolumeType).To(Equal(LVTMirrorImageOutOfSync))
     })
   })
 })

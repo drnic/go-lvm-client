@@ -8,20 +8,29 @@ import (
 )
 
 type LogicalVolumeType int
+type AllocationPolicyType int
 
 const (  // iota is reset to 0
-  Unspecified LogicalVolumeType = iota
-  Mirrored
-  MirroredWithoutInitialSync
-  Origin
-  OriginWithMergingSnapshot
-  Snapshot
-  MergingSnapshot
-  Pvmove
-  Virtual
-  MirrorImage
-  MirrorImageOutOfSync
-  UnderConversion
+  LVTUnspecified LogicalVolumeType = iota
+  LVTMirrored
+  LVTMirroredWithoutInitialSync
+  LVTOrigin
+  LVTOriginWithMergingSnapshot
+  LVTSnapshot
+  LVTMergingSnapshot
+  LVTPvmove
+  LVTVirtual
+  LVTMirrorImage
+  LVTMirrorImageOutOfSync
+  LVTUnderConversion
+)
+
+const (
+  LVATContiguous AllocationPolicyType = iota
+  LVATCling
+  LVATNormal
+  LVATAnywhere
+  LVATInherited
 )
 
 type LogicalVolume struct {
@@ -29,6 +38,9 @@ type LogicalVolume struct {
   VGName         string
   Attrs          string
   VolumeType     LogicalVolumeType
+  Writable       bool
+  AllocationPolicy AllocationPolicyType
+  Locked         bool
   LVSize         float64
 }
 
@@ -55,22 +67,32 @@ func (lv *LogicalVolume) ParseLine(lvsLine string, delimiter string) (err error)
   return
 }
 
-func (vg *LogicalVolume) parseAttr() {
-  attrs := strings.Split(vg.Attrs, "")
+func (lv *LogicalVolume) parseAttr() {
+  attrs := strings.Split(lv.Attrs, "")
   switch attrs[0] {
-    case "-": vg.VolumeType = Unspecified
-    case "m": vg.VolumeType = Mirrored
-    case "M": vg.VolumeType = MirroredWithoutInitialSync
-    case "o": vg.VolumeType = Origin
-    case "O": vg.VolumeType = OriginWithMergingSnapshot
-    case "s": vg.VolumeType = Snapshot
-    case "S": vg.VolumeType = MergingSnapshot
-    case "p": vg.VolumeType = Pvmove
-    case "v": vg.VolumeType = Virtual
-    case "i": vg.VolumeType = MirrorImage
-    case "I": vg.VolumeType = MirrorImageOutOfSync
-    case "c": vg.VolumeType = UnderConversion
+    case "-": lv.VolumeType = LVTUnspecified
+    case "m": lv.VolumeType = LVTMirrored
+    case "M": lv.VolumeType = LVTMirroredWithoutInitialSync
+    case "o": lv.VolumeType = LVTOrigin
+    case "O": lv.VolumeType = LVTOriginWithMergingSnapshot
+    case "s": lv.VolumeType = LVTSnapshot
+    case "S": lv.VolumeType = LVTMergingSnapshot
+    case "p": lv.VolumeType = LVTPvmove
+    case "v": lv.VolumeType = LVTVirtual
+    case "i": lv.VolumeType = LVTMirrorImage
+    case "I": lv.VolumeType = LVTMirrorImageOutOfSync
+    case "c": lv.VolumeType = LVTUnderConversion
   }
+  lv.Writable = attrs[1] == "w"
+  switch strings.ToLower(attrs[2]) {
+    case "c": lv.AllocationPolicy = LVATContiguous
+    case "l": lv.AllocationPolicy = LVATCling
+    case "n": lv.AllocationPolicy = LVATNormal
+    case "a": lv.AllocationPolicy = LVATAnywhere
+    case "i": lv.AllocationPolicy = LVATInherited
+  }
+  // Capitalised if the volume is currently locked against allocation changes
+  lv.Locked = attrs[2] != strings.ToLower(attrs[2])
 }
 
 func LogicalVolumes(repo system.SystemRepository) (lvs []LogicalVolume, err error) {

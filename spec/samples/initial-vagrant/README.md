@@ -44,7 +44,8 @@ The lv_attr bits are:
 1.  Volume type: (m)irrored, (M)irrored without initial sync, (o)rigin, (O)rigin with merging snapshot, (s)napshot,  merging  (S)napshot,  (p)vmove,  (v)irtual,
    mirror (i)mage, mirror (I)mage out-of-sync, under (c)onversion
 2.  Permissions: (w)riteable, (r)ead-only
-3.  Allocation  policy:  (c)ontiguous,  c(l)ing,  (n)ormal,  (a)nywhere,  (i)nherited  This  is capitalised if the volume is currently locked against allocation changes, for example during pvmove (8).
+3.  Allocation  policy:  (c)ontiguous,  c(l)ing,  (n)ormal,  (a)nywhere,  (i)nherited
+    This  is capitalised if the volume is currently locked against allocation changes, for example during pvmove (8).
 4.  fixed (m)inor
 5.  State: (a)ctive, (s)uspended, (I)nvalid snapshot, invalid (S)uspended snapshot, mapped (d)evice present without tables, mapped device present  with  (i)nactive table
 6.  device (o)pen
