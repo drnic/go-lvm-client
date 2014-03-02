@@ -4,6 +4,7 @@ import (
   "errors"
   "strings"
   "strconv"
+  "github.com/starkandwayne/go-lvm-client/system"
 )
 
 type VolumeGroup struct {
@@ -72,5 +73,22 @@ func (vg *VolumeGroup) parseAttr() {
   vg.Partial = attrs[3] == "p"
   vg.AllocationPolicy = attrs[4]
   vg.Clustered = attrs[5] == "c"
+}
 
+func VolumeGroups(repo system.SystemRepository) (vgs []VolumeGroup, err error) {
+  vgsOutput, delimiter, err := repo.VolumeGroups()
+  vgs = []VolumeGroup{}
+  vgsLines := strings.Split(vgsOutput, "\n")
+  for _, vgLine := range vgsLines {
+    if len(vgLine) > 0 {
+      vg := NewVolumeGroup()
+      err = vg.ParseLine(vgLine, delimiter)
+      if err != nil {
+        return
+      }
+      vgs = append(vgs, vg)
+    }
+  }
+
+  return
 }

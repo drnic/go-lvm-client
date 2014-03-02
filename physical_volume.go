@@ -45,7 +45,7 @@ func (pv *PhysicalVolume) ParseLine(pvsLine string, delimiter string) (err error
 }
 
 func PhysicalVolumes(repo system.SystemRepository) (pvs []PhysicalVolume, err error) {
-  pvsOutput, delimiter, err := repo.PVS()
+  pvsOutput, delimiter, err := repo.PhyiscalVolumes()
   pvs = []PhysicalVolume{}
   pvsLines := strings.Split(pvsOutput, "\n")
   for _, pvLine := range pvsLines {

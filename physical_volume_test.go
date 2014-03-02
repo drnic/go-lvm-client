@@ -29,7 +29,7 @@ var _ = Describe("PhysicalVolume", func() {
 	})
 
 	Describe("parse pvs output", func() {
-		It("initial-vagrant", func() {
+		It("parses sample", func() {
 			systemRepo := &system.FakeSystemRepository{
 				PvsOutput: "  /dev/sda5:precise64:lvm2:a-:81672.00:0\n  /dev/sda6:precise64:lvm2:a-:81672.00:0",
 			}

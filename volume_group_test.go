@@ -4,7 +4,7 @@ import (
   . "github.com/onsi/ginkgo"
   . "github.com/onsi/gomega"
   . "github.com/starkandwayne/go-lvm-client"
-/*  "github.com/starkandwayne/go-lvm-client/system"*/
+  "github.com/starkandwayne/go-lvm-client/system"
 )
 
 var _ = Describe("VolumeGroup", func() {
@@ -44,4 +44,17 @@ var _ = Describe("VolumeGroup", func() {
       Expect(err).ToNot(BeNil())
     })
   })
+
+  Describe("parse vgs output", func() {
+    It("parses sample", func() {
+      systemRepo := &system.FakeSystemRepository{
+        VgsOutput: "  precise64:1:2:0:wz--n-:81672.00:0",
+      }
+      vgs, err := VolumeGroups(systemRepo)
+      Expect(err).To(BeNil())
+      Expect(len(vgs)).To(Equal(1))
+      Expect(vgs[0].VGName).To(Equal("precise64"))
+    })
+  })
+
 })
