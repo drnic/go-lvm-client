@@ -7,10 +7,28 @@ import (
   "github.com/starkandwayne/go-lvm-client/system"
 )
 
+type LogicalVolumeType int
+
+const (  // iota is reset to 0
+  Unspecified LogicalVolumeType = iota
+  Mirrored
+  MirroredWithoutInitialSync
+  Origin
+  OriginWithMergingSnapshot
+  Snapshot
+  MergingSnapshot
+  Pvmove
+  Virtual
+  MirrorImage
+  MirrorImageOutOfSync
+  UnderConversion
+)
+
 type LogicalVolume struct {
   LVName         string
   VGName         string
-  Attr           string
+  Attrs          string
+  VolumeType     LogicalVolumeType
   LVSize         float64
 }
 
@@ -26,7 +44,8 @@ func (lv *LogicalVolume) ParseLine(lvsLine string, delimiter string) (err error)
   }
   lv.LVName = tokens[0]
   lv.VGName = tokens[1]
-  lv.Attr   = tokens[2]
+  lv.Attrs  = tokens[2]
+  lv.parseAttr()
 
   lv.LVSize, err = strconv.ParseFloat(tokens[3], 32)
   if (err != nil) {
@@ -34,6 +53,24 @@ func (lv *LogicalVolume) ParseLine(lvsLine string, delimiter string) (err error)
   }
 
   return
+}
+
+func (vg *LogicalVolume) parseAttr() {
+  attrs := strings.Split(vg.Attrs, "")
+  switch attrs[0] {
+    case "-": vg.VolumeType = Unspecified
+    case "m": vg.VolumeType = Mirrored
+    case "M": vg.VolumeType = MirroredWithoutInitialSync
+    case "o": vg.VolumeType = Origin
+    case "O": vg.VolumeType = OriginWithMergingSnapshot
+    case "s": vg.VolumeType = Snapshot
+    case "S": vg.VolumeType = MergingSnapshot
+    case "p": vg.VolumeType = Pvmove
+    case "v": vg.VolumeType = Virtual
+    case "i": vg.VolumeType = MirrorImage
+    case "I": vg.VolumeType = MirrorImageOutOfSync
+    case "c": vg.VolumeType = UnderConversion
+  }
 }
 
 func LogicalVolumes(repo system.SystemRepository) (lvs []LogicalVolume, err error) {

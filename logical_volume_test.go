@@ -11,11 +11,13 @@ var _ = Describe("LogicalVolume", func() {
   Describe("parse colon output", func() {
     It("new from colon output", func() {
       lv := NewLogicalVolume()
-      err := lv.ParseLine("  root:precise64:-wi-ao:80904.00::::::", ":")
+      err := lv.ParseLine("  root:precise64:owi-ao:80904.00::::::", ":")
       Expect(err).To(BeNil())
       Expect(lv.LVName).To(Equal("root"))
       Expect(lv.VGName).To(Equal("precise64"))
-      Expect(lv.Attr).To(Equal("-wi-ao"))
+      Expect(lv.Attrs).To(Equal("owi-ao"))
+      Expect(lv.VolumeType).To(Equal(Origin))
+
       Expect(lv.LVSize).To(Equal(80904.0)) // Mb
     })
 
@@ -29,13 +31,15 @@ var _ = Describe("LogicalVolume", func() {
   Describe("parse lvs output", func() {
     It("parses sample", func() {
       systemRepo := &system.FakeSystemRepository{
-        LvsOutput: "  root:precise64:-wi-ao:80904.00::::::\n  swap_1:precise64:-wi-ao:768.00::::::\n",
+        LvsOutput: "  root:precise64:vwi-ao:80904.00::::::\n  swap_1:precise64:Iwi-ao:768.00::::::\n",
       }
       lvs, err := LogicalVolumes(systemRepo)
       Expect(err).To(BeNil())
       Expect(len(lvs)).To(Equal(2))
       Expect(lvs[0].LVName).To(Equal("root"))
+      Expect(lvs[0].VolumeType).To(Equal(Virtual))
       Expect(lvs[1].LVName).To(Equal("swap_1"))
+      Expect(lvs[1].VolumeType).To(Equal(MirrorImageOutOfSync))
     })
   })
 })
