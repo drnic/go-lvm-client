@@ -20,8 +20,8 @@ func NewPhysicalVolume() PhysicalVolume {
 	return PhysicalVolume{}
 }
 
-func (pv *PhysicalVolume) ParseLine(pvdisplayWithColons string, delimiter string) (err error) {
-  tokens := strings.Split(strings.Trim(pvdisplayWithColons, " "), delimiter)
+func (pv *PhysicalVolume) ParseLine(pvsLine string, delimiter string) (err error) {
+  tokens := strings.Split(strings.Trim(pvsLine, " "), delimiter)
   if (len(tokens) != 6) {
     err = errors.New("Expected 6 colon items from pvs. Perhaps an unsupported operating system.")
     return

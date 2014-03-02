@@ -18,3 +18,10 @@ Other examples:
   PV:VG:Fmt:Attr:PSize:PFree
   /dev/sda5:precise64:lvm2:a-:81672.00:0
 ```
+
+* `vgs` comes from `# vgs --units=m --separator=: --nosuffix --noheadings`
+
+```
+# vgs --units=m --separator=: --nosuffix --noheadings
+  precise64:1:2:0:wz--n-:81672.00:0
+```

@@ -8,11 +8,20 @@ import (
 
 func main() {
   repo := system.RealSystemRepository{}
-  pvs, err := lvm.PhysicalVolumes(repo)
+
+	pvs, err := lvm.PhysicalVolumes(repo)
   if err != nil {
     fmt.Println(err.Error());
     return
   }
   fmt.Println("Physical Volumes:");
   fmt.Printf("%v\n", pvs)
+
+	vgs, err := lvm.VolumeGroups(repo)
+	if err != nil {
+		fmt.Println(err.Error());
+		return
+	}
+	fmt.Println("Volume Groups:");
+	fmt.Printf("%v\n", vgs)
 }
