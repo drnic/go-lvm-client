@@ -44,17 +44,26 @@ const (
 )
 
 type LogicalVolume struct {
-  LVName         string
-  VGName         string
-  Attrs          string
-  VolumeType     LogicalVolumeType
-  Writable       bool
+  LVName           string
+  VGName           string
+
+  Attrs            string
+  VolumeType       LogicalVolumeType
+  Writable         bool
   AllocationPolicy AllocationPolicyType
-  Locked         bool
-  FixedMinor     bool
-  State          LogicalVolumeStateType
-  DeviceOpen     bool
-  LVSize         float64
+  Locked           bool
+  FixedMinor       bool
+  State            LogicalVolumeStateType
+  DeviceOpen       bool
+
+  LVSize           float64
+
+  Origin           string
+  SnapshotPercent  string
+  Move             string
+  Log              string
+  CopyPercent      string
+  Convert          string
 }
 
 func NewLogicalVolume() LogicalVolume {
@@ -76,6 +85,14 @@ func (lv *LogicalVolume) ParseLine(lvsLine string, delimiter string) (err error)
   if (err != nil) {
     return err
   }
+
+  // Parsing these tokens but not yet sure what they are for or what types they are
+  lv.Origin = tokens[4]
+  lv.SnapshotPercent = tokens[5]
+  lv.Move = tokens[6]
+  lv.Log = tokens[7]
+  lv.CopyPercent = tokens[8]
+  lv.Convert = tokens[9]
 
   return
 }
