@@ -16,29 +16,24 @@ type RealSystemRepository struct {
 
 func (repo RealSystemRepository) PhyiscalVolumes() (output string, delimiter string, err error) {
   delimiter = ":"
-  cmd := exec.Command("pvs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
-  out, err := cmd.Output()
-  output = fmt.Sprintf("%s", out)
-  if err != nil {
-    return
-  }
+  output, err = repo.runCommand("pvs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
   return
 }
 
 func (repo RealSystemRepository) VolumeGroups() (output string, delimiter string, err error) {
   delimiter = ":"
-  cmd := exec.Command("vgs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
-  out, err := cmd.Output()
-  output = fmt.Sprintf("%s", out)
-  if err != nil {
-    return
-  }
+  output, err = repo.runCommand("vgs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
   return
 }
 
 func (repo RealSystemRepository) LogicalVolumes() (output string, delimiter string, err error) {
   delimiter = ":"
-  cmd := exec.Command("lvs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
+  output, err = repo.runCommand("lvs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
+  return
+}
+
+func (repo RealSystemRepository) runCommand(name string, args ...string) (output string, err error) {
+  cmd := exec.Command(name, args...)
   out, err := cmd.Output()
   output = fmt.Sprintf("%s", out)
   if err != nil {
