@@ -17,7 +17,7 @@ var _ = Describe("VolumeGroup", func() {
       Expect(vg.PhyiscalVolumes).To(Equal(1))
       Expect(vg.LogicalVolumes).To(Equal(2))
       /* unknown '0' in token 4 */
-      Expect(vg.Attr).To(Equal("wz--n-"))
+      Expect(vg.Attrs).To(Equal("wz--n-"))
       /*
       The vg_attr bits are:
         1  Permissions: (w)riteable, (r)ead-only
@@ -26,12 +26,12 @@ var _ = Describe("VolumeGroup", func() {
         4  (p)artial: one or more physical volumes belonging to the volume group are missing from the system
         5  Allocation policy: (c)ontiguous, c(l)ing, (n)ormal, (a)nywhere, (i)nherited
         6  (c)lustered */
-/*      Expect(vg.Writable).To(BeTrue())
+      Expect(vg.Writable).To(BeTrue())
       Expect(vg.Resizable).To(BeTrue())
       Expect(vg.Exported).ToNot(BeTrue())
       Expect(vg.Partial).ToNot(BeTrue())
       Expect(vg.AllocationPolicy).To(Equal("n"))
-      Expect(vg.Clustered).ToNot(Equal(BeTrue()))*/
+      Expect(vg.Clustered).ToNot(Equal(BeTrue()))
 
       Expect(vg.VSize).To(Equal(81672.0))
       Expect(vg.VFree).To(Equal(0.0))
