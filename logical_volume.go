@@ -82,6 +82,9 @@ func (lv *LogicalVolume) ParseLine(lvsLine string, delimiter string) (err error)
 
 func (lv *LogicalVolume) parseAttr() {
   attrs := strings.Split(lv.Attrs, "")
+
+  // 1.  Volume type: (m)irrored, (M)irrored without initial sync, (o)rigin, (O)rigin with merging snapshot, (s)napshot,  merging  (S)napshot,  (p)vmove,  (v)irtual,
+  //     mirror (i)mage, mirror (I)mage out-of-sync, under (c)onversion
   switch attrs[0] {
     case "-": lv.VolumeType = LVTUnspecified
     case "m": lv.VolumeType = LVTMirrored
@@ -96,7 +99,12 @@ func (lv *LogicalVolume) parseAttr() {
     case "I": lv.VolumeType = LVTMirrorImageOutOfSync
     case "c": lv.VolumeType = LVTUnderConversion
   }
+
+  // 2.  Permissions: (w)riteable, (r)ead-only
   lv.Writable = attrs[1] == "w"
+
+  // 3.  Allocation  policy:  (c)ontiguous,  c(l)ing,  (n)ormal,  (a)nywhere,  (i)nherited
+  //     This  is capitalised if the volume is currently locked against allocation changes, for example during pvmove (8).
   switch strings.ToLower(attrs[2]) {
     case "c": lv.AllocationPolicy = LVATContiguous
     case "l": lv.AllocationPolicy = LVATCling
@@ -106,7 +114,11 @@ func (lv *LogicalVolume) parseAttr() {
   }
   // Capitalised if the volume is currently locked against allocation changes
   lv.Locked = attrs[2] != strings.ToLower(attrs[2])
+
+  // 4.  fixed (m)inor
   lv.FixedMinor = attrs[3] == "m"
+
+  // 5.  State: (a)ctive, (s)uspended, (I)nvalid snapshot, invalid (S)uspended snapshot, mapped (d)evice present without tables, mapped device present  with  (i)nactive table
   switch attrs[4] {
     case "a": lv.State = LVStateActive
     case "s": lv.State = LVStateSuspended
@@ -115,6 +127,8 @@ func (lv *LogicalVolume) parseAttr() {
     case "d": lv.State = LVStateMappedDevicePresentWithoutTables
     case "i": lv.State = LVStateMappedDevicePresentWithInactiveTable
   }
+
+  // 6.  device (o)pen
   lv.DeviceOpen = attrs[5] == "o"
 }
 
