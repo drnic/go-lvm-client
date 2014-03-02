@@ -14,5 +14,5 @@ func main() {
     return
   }
   fmt.Println("Physical Volumes:");
-  fmt.Printf("%v#", pvs)
+  fmt.Printf("%v\n", pvs)
 }

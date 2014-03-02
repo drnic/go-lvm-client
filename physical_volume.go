@@ -23,7 +23,7 @@ func NewPhysicalVolume() PhysicalVolume {
 func (pv *PhysicalVolume) ParseLine(pvdisplayWithColons string, delimiter string) (err error) {
   tokens := strings.Split(strings.Trim(pvdisplayWithColons, " "), delimiter)
   if (len(tokens) != 6) {
-    err = errors.New("Expected 6 colon items from pvs")
+    err = errors.New("Expected 6 colon items from pvs. Perhaps an unsupported operating system.")
     return
   }
   pv.PVName = tokens[0]
@@ -47,18 +47,16 @@ func (pv *PhysicalVolume) ParseLine(pvdisplayWithColons string, delimiter string
 func PhysicalVolumes(repo system.SystemRepository) (pvs []PhysicalVolume, err error) {
   pvsOutput, delimiter, err := repo.PVS()
   pvs = []PhysicalVolume{}
-  // split output by newline
-  // look over lines
-  // ParseLine
-  // append to pvs
   pvsLines := strings.Split(pvsOutput, "\n")
   for _, pvLine := range pvsLines {
-    pv := NewPhysicalVolume()
-    err = pv.ParseLine(pvLine, delimiter)
-    if err != nil {
-      return
+    if len(pvLine) > 0 {
+      pv := NewPhysicalVolume()
+      err = pv.ParseLine(pvLine, delimiter)
+      if err != nil {
+        return
+      }
+      pvs = append(pvs, pv)
     }
-    pvs = append(pvs, pv)
   }
 
   return
