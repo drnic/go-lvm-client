@@ -9,6 +9,7 @@ import (
 
 type LogicalVolumeType int
 type AllocationPolicyType int
+type LogicalVolumeStateType int
 
 const (  // iota is reset to 0
   LVTUnspecified LogicalVolumeType = iota
@@ -33,6 +34,15 @@ const (
   LVATInherited
 )
 
+const (
+  LVStateActive LogicalVolumeStateType = iota
+  LVStateSuspended
+  LVStateInvalidSnapshot
+  LVStateInvalidSuspendedSnapshot
+  LVStateMappedDevicePresentWithoutTables
+  LVStateMappedDevicePresentWithInactiveTable
+)
+
 type LogicalVolume struct {
   LVName         string
   VGName         string
@@ -41,6 +51,9 @@ type LogicalVolume struct {
   Writable       bool
   AllocationPolicy AllocationPolicyType
   Locked         bool
+  FixedMinor     bool
+  State          LogicalVolumeStateType
+  DeviceOpen     bool
   LVSize         float64
 }
 
@@ -93,6 +106,16 @@ func (lv *LogicalVolume) parseAttr() {
   }
   // Capitalised if the volume is currently locked against allocation changes
   lv.Locked = attrs[2] != strings.ToLower(attrs[2])
+  lv.FixedMinor = attrs[3] == "m"
+  switch attrs[4] {
+    case "a": lv.State = LVStateActive
+    case "s": lv.State = LVStateSuspended
+    case "I": lv.State = LVStateInvalidSnapshot
+    case "S": lv.State = LVStateInvalidSuspendedSnapshot
+    case "d": lv.State = LVStateMappedDevicePresentWithoutTables
+    case "i": lv.State = LVStateMappedDevicePresentWithInactiveTable
+  }
+  lv.DeviceOpen = attrs[5] == "o"
 }
 
 func LogicalVolumes(repo system.SystemRepository) (lvs []LogicalVolume, err error) {

@@ -20,6 +20,9 @@ var _ = Describe("LogicalVolume", func() {
       Expect(lv.Writable).To(BeTrue())
       Expect(lv.AllocationPolicy).To(Equal(LVATInherited))
       Expect(lv.Locked).ToNot(BeTrue())
+      Expect(lv.FixedMinor).ToNot(BeTrue())
+      Expect(lv.State).To(Equal(LVStateActive))
+      Expect(lv.DeviceOpen).To(BeTrue())
 
       Expect(lv.LVSize).To(Equal(80904.0)) // Mb
     })
