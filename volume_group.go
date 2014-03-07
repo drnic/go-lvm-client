@@ -9,7 +9,7 @@ import (
 
 type VolumeGroup struct {
   VGName           string
-  PhyiscalVolumes  int
+  PhysicalVolumes  int
   LogicalVolumes   int
   Attrs            string
   Writable         bool
@@ -40,7 +40,7 @@ func (vg *VolumeGroup) ParseLine(vgsLine string, delimiter string) (err error) {
   if (err != nil) {
     return err
   }
-  vg.PhyiscalVolumes = int(uint64Value)
+  vg.PhysicalVolumes = int(uint64Value)
 
   uint64Value, err = strconv.ParseUint(tokens[2], 10, 32)
   if (err != nil) {

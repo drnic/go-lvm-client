@@ -14,7 +14,7 @@ var _ = Describe("VolumeGroup", func() {
       err := vg.ParseLine("  precise64:1:2:0:wz--n-:81672.00:0", ":")
       Expect(err).To(BeNil())
       Expect(vg.VGName).To(Equal("precise64"))
-      Expect(vg.PhyiscalVolumes).To(Equal(1))
+      Expect(vg.PhysicalVolumes).To(Equal(1))
       Expect(vg.LogicalVolumes).To(Equal(2))
       /* unknown '0' in token 4 */
       Expect(vg.Attrs).To(Equal("wz--n-"))

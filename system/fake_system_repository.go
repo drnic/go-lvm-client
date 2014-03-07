@@ -6,7 +6,7 @@ type FakeSystemRepository struct {
   LvsOutput string
 }
 
-func (repo FakeSystemRepository) PhyiscalVolumes() (output string, delimiter string, err error) {
+func (repo FakeSystemRepository) PhysicalVolumes() (output string, delimiter string, err error) {
   output = repo.PvsOutput
   delimiter = ":"
   return

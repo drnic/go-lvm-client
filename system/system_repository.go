@@ -6,7 +6,7 @@ import (
 )
 
 type SystemRepository interface {
-  PhyiscalVolumes() (output string, delimiter string, err error)
+  PhysicalVolumes() (output string, delimiter string, err error)
   VolumeGroups() (output string, delimiter string, err error)
   LogicalVolumes() (output string, delimiter string, err error)
 }
@@ -14,7 +14,7 @@ type SystemRepository interface {
 type RealSystemRepository struct {
 }
 
-func (repo RealSystemRepository) PhyiscalVolumes() (output string, delimiter string, err error) {
+func (repo RealSystemRepository) PhysicalVolumes() (output string, delimiter string, err error) {
   delimiter = ":"
   output, err = repo.runCommand("pvs", "--units=m", "--separator=:", "--nosuffix", "--noheadings")
   return
