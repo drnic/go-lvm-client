@@ -1,4 +1,4 @@
-box: pjvds/golang
+box: wercker/golang
 build:
   steps:
     # Sets the go workspace and places you package
