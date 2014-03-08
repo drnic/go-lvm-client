@@ -11,7 +11,7 @@ build:
           go version
           go get github.com/onsi/ginkgo
           go get github.com/onsi/gomega
-          go get -t ./...
+          go get ./...
 
     # Build the project
     - script:
